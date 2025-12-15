@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Elms Sans', 'Fira Sans', 'sans-serif'],
+      },
       colors: {
         purple: {
           50: '#faf5ff',
@@ -19,6 +22,31 @@ export default {
           800: '#6b21a8',
           900: '#581c87',
         },
+        background: 'rgb(var(--background))',
+        foreground: 'rgb(var(--foreground))',
+        muted: {
+          DEFAULT: 'rgb(var(--muted))',
+          foreground: 'rgb(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'rgb(var(--accent))',
+          foreground: 'rgb(var(--accent-foreground))',
+        },
+        primary: {
+          DEFAULT: 'rgb(var(--primary))',
+          foreground: 'rgb(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'rgb(var(--secondary))',
+          foreground: 'rgb(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'rgb(var(--destructive))',
+          foreground: 'rgb(var(--destructive-foreground))',
+        },
+        ring: 'rgb(var(--ring))',
+        input: 'rgb(var(--input))',
+        border: 'rgb(var(--border))',
       },
     },
   },

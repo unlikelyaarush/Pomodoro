@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { supabase, getCurrentUser, signOut } from './lib/supabase';
-import Navbar from './components/Navbar';
+import { SimpleHeader } from './components/ui/simple-header';
 import LandingPage from './components/LandingPage';
+import AuthPage from './components/AuthPage';
 import Header from './components/Header';
 import AssignmentForm from './components/AssignmentForm';
-import Auth from './components/Auth';
 import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState('landing'); // 'landing' or 'auth'
 
   useEffect(() => {
     // Check initial session
@@ -31,6 +32,10 @@ function App() {
     try {
       const currentUser = await getCurrentUser();
       setUser(currentUser);
+      // If user is logged in, show assignment form by default
+      if (currentUser) {
+        setCurrentPage('app');
+      }
     } catch (error) {
       console.error('Error checking user:', error);
       setUser(null);
@@ -41,6 +46,7 @@ function App() {
 
   const handleAuthSuccess = () => {
     checkUser();
+    setCurrentPage('app'); // Show assignment form after successful auth
   };
 
   const handleSignOut = async () => {
@@ -61,32 +67,42 @@ function App() {
 
   return (
     <div className="min-h-screen">
-      <Navbar onSignOut={() => setUser(null)} />
+      <SimpleHeader 
+        user={user}
+        onSignOut={() => setUser(null)} 
+        onNavigateToAuth={() => setCurrentPage('auth')} 
+        onNavigateToHome={() => setCurrentPage('landing')}
+      />
       
       {!user ? (
-        <>
-          <LandingPage />
-          <div id="app" className="min-h-screen py-20 px-4 bg-gray-900/50">
+        currentPage === 'auth' ? (
+          <AuthPage onAuthSuccess={handleAuthSuccess} />
+        ) : (
+          <LandingPage 
+            user={user}
+            onNavigateToAuth={() => setCurrentPage('auth')} 
+            onNavigateToApp={() => setCurrentPage('app')}
+          />
+        )
+      ) : (
+        currentPage === 'app' ? (
+          <div className="min-h-screen py-20 px-4 pt-24">
             <div className="max-w-4xl mx-auto">
-              <div className="bg-gray-800 rounded-lg p-8 shadow-2xl border border-gray-700">
+              <Header />
+              <div className="bg-gray-800 rounded-lg p-8 shadow-2xl">
                 <ErrorBoundary>
-                  <Auth onAuthSuccess={handleAuthSuccess} />
+                  <AssignmentForm />
                 </ErrorBoundary>
               </div>
             </div>
           </div>
-        </>
-      ) : (
-        <div className="min-h-screen py-20 px-4 pt-24">
-          <div className="max-w-4xl mx-auto">
-            <Header />
-            <div className="bg-gray-800 rounded-lg p-8 shadow-2xl">
-              <ErrorBoundary>
-                <AssignmentForm />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </div>
+        ) : (
+          <LandingPage 
+            user={user}
+            onNavigateToAuth={() => setCurrentPage('auth')} 
+            onNavigateToApp={() => setCurrentPage('app')}
+          />
+        )
       )}
     </div>
   );

@@ -5,10 +5,10 @@ export default function Header() {
         Pomodoro
       </h1>
       <p className="text-gray-400 text-lg">
-        Get realistic time estimates and stop underestimating your homework
+        Assignment Time Predictor
       </p>
       <p className="text-sm text-purple-400 mt-1">
-        Assignment Time Predictor
+        Get realistic time estimates and stop underestimating your homework
       </p>
     </header>
   );
